@@ -1,1 +1,67 @@
 
+<html>
+    <head>
+      <script src="https://unpkg.com/react@16/umd/react.development.js" crossorigin></script>
+      <script src="https://unpkg.com/react-dom@16/umd/react-dom.development.js" crossorigin></script>
+      <script src="https://unpkg.com/babel-standalone@6/babel.min.js"></script>
+      <script src='https://cdnjs.cloudflare.com/ajax/libs/axios/0.19.2/axios.js'></script>
+    </head>
+    <style>
+        .container {
+            display: flex;
+            justify-content: space-around;
+            flex-wrap: wrap;
+
+        }
+        .greenBox {
+            background-color: teal;
+            color: white;
+            width: 28%;
+            height: 15%;
+            margin: 5px;
+            text-align: center;
+            border-radius: 5%;
+            font-family: arial;
+            
+        }
+    </style>
+    <body>
+      <h1>Acme Express w/ JSON</h1>
+      <div id='root'></div>
+      <script type='text/babel'>
+        class App extends React.Component {
+            constructor () {
+                super();
+                this.state = {
+                    products: [],
+                    companies: []
+                }
+            }
+            
+
+            render () {
+            axios.get('http://localhost:3000/api/products').then(data => this.setState({products: data.data}));
+            axios.get('http://localhost:3000/api/companies').then(data => this.setState({companies: data.data}));
+            const { products, companies } = this.state;
+        
+                return (<div>
+                    <div className="container">{products.map(product => {return (
+                      <div className="greenBox">
+                            <h2>{product.name.toUpperCase()}</h2>
+                            <p>{product.description}</p>
+                            <p>${product.suggestedPrice}.00</p>
+                            </div>) })}
+                            <div><ul>{companies.map(company => {
+                                return (
+                                    <li key={company.id}>{company.name}</li>)})}
+                                    </ul></div>
+                    
+                     </div></div>
+                ) 
+            }
+        }
+  
+        ReactDOM.render(<App />, document.querySelector('#root'));
+      </script>
+    </body>
+  </html>
